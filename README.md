@@ -1,12 +1,20 @@
 # Acorn
 
-Acorn is an Electron desktop app for comparing Git branches and commits. It builds web-renderable previews locally for supported web and Expo projects.
+<img width="2172" height="691" alt="acorn-banner" src="https://github.com/user-attachments/assets/8ae1c6b4-fdeb-40ff-885f-a2568ffe5b64" />
+
+
+Acorn is an Electron desktop app for comparing Git branches and commits.<br/>
+It builds web-renderable previews locally for supported web and Expo projects.<br/><br/>
+
 
 ## Features
 
+<img width="1624" height="1025" alt="acorn-screenshot" src="https://github.com/user-attachments/assets/bdb64253-b1c3-42a3-a14e-af8ce87b4417" />
+
+
 - Connect an existing local Git repository.
 - Select a branch or commit as Base and Target. Commit log starts with 50 entries; scroll to the bottom of the commit menu to append the next 50 until the full local history reachable from the initial HEAD is loaded.
-- Refresh Preview (`Command/Ctrl+R`) rereads the active repository's local branches and latest 50 commits without fetching from its remote. Existing Base and Target selections remain selected, and further commit pages continue from the refreshed HEAD.
+- Refresh Preview (`Command+R`) rereads the active repository's local branches and latest 50 commits without fetching from its remote. Existing Base and Target selections remain selected, and further commit pages continue from the refreshed HEAD.
 - Browse pages below each revision using a Finder-style column picker; open supported screens directly in UI-only mode. See [page browsing and isolation](docs/ui-preview.md).
 - Review changed files, line counts, and unified text patches.
 - Compare the same states in previews and Git diff, including tracked local edits when Working folder is selected.
