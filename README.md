@@ -10,8 +10,9 @@ It builds web-renderable previews locally for supported web and Expo projects.<b
 ## Demo
 
 
+https://github.com/user-attachments/assets/59a2ac54-d0f8-4e85-8622-d434f9d140f3
 
-https://github.com/user-attachments/assets/cd10bcbb-4efb-4ae5-9ada-08e81a19fb87
+
 
 
 ## Install and run
