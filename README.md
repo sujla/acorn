@@ -7,31 +7,12 @@ Acorn is an Electron desktop app for comparing Git branches and commits.<br/>
 It builds web-renderable previews locally for supported web and Expo projects.<br/><br/>
 
 
-## Features
-
-<img width="1624" height="1025" alt="acorn-screenshot" src="https://github.com/user-attachments/assets/bdb64253-b1c3-42a3-a14e-af8ce87b4417" />
+## Demo
 
 
-- Connect an existing local Git repository.
-- Select a branch or commit as Base and Target. Commit log starts with 50 entries; scroll to the bottom of the commit menu to append the next 50 until the full local history reachable from the initial HEAD is loaded.
-- Refresh Preview (`Command+R`) rereads the active repository's local branches and latest 50 commits without fetching from its remote. Existing Base and Target selections remain selected, and further commit pages continue from the refreshed HEAD.
-- Browse pages below each revision using a Finder-style column picker; open supported screens directly in UI-only mode. See [page browsing and isolation](docs/ui-preview.md).
-- Review changed files, line counts, and unified text patches.
-- Compare the same states in previews and Git diff, including tracked local edits when Working folder is selected.
-- Toggle Highlight Changes beside Mouse Sync for purple overlays on estimated changed areas.
-- Compile supported Expo-based React Native projects into local web previews inside Acorn.
-- Compile supported web previews locally and serve them through an isolated loopback viewer.
-- Preview historical commits from temporary snapshots without checking them out in the connected repository.
-- Refresh both previews automatically when Base or Target changes.
 
-## Requirements
+https://github.com/user-attachments/assets/cd10bcbb-4efb-4ae5-9ada-08e81a19fb87
 
-- macOS
-- Node.js and npm
-- Git
-- A local Git repository containing a supported web or Expo project
-
-Acorn does not require an account, API key, hosted backend, or GitHub OAuth app. Git inspection, snapshots, and preview compilation run locally. A normal preview can request restricted public HTTPS JSON through Preview Data, and an incompatible historical dependency set can require package-registry access to populate Acorn's separate preview cache. These exceptions are described below.
 
 ## Install and run
 
@@ -49,17 +30,29 @@ restarts after both new entry files exist. Incomplete moves are retried. This
 does not discover an arbitrary move of the entire project directory; quit the
 app before moving that directory and launch it from its new location afterward.
 
-To serve only Acorn's interface in a browser:
 
-```bash
-npm run web
-```
 
-Validate JavaScript syntax and automated behavior:
+## Features
 
-```bash
-npm test
-```
+<img width="1624" height="1025" alt="acorn-screenshot" src="https://github.com/user-attachments/assets/bdb64253-b1c3-42a3-a14e-af8ce87b4417" />
+
+
+- Connect an existing local Git repository.
+- Select a branch or commit as Base and Target.
+- Preview historical commits from temporary snapshots without checking them out in the connected repository.
+- Review changed files, line counts, and unified text patches.
+- Compile supported Expo-based React Native projects into local web previews inside Acorn.
+- Compile supported web previews locally and serve them through an isolated loopback viewer.
+
+
+## Requirements
+
+- macOS
+- Node.js and npm
+- Git
+- A local Git repository containing a supported web or Expo project
+
+Acorn does not require an account, API key, hosted backend, or GitHub OAuth app. Git inspection, snapshots, and preview compilation run locally. A normal preview can request restricted public HTTPS JSON through Preview Data, and an incompatible historical dependency set can require package-registry access to populate Acorn's separate preview cache. These exceptions are described below.
 
 ## Preview model
 
