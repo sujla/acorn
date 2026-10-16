@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Acorn</title>
+    <script src="theme.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell projects-loading" id="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-heading"><div class="brand" aria-label="Acorn"><img class="brand-mark brand-wordmark" src="assets/acorn-logo-primary.svg" width="590" height="140" alt="" aria-hidden="true" /></div><button class="sidebar-toggle" id="sidebar-toggle" aria-label="Collapse sidebar" aria-expanded="true"><img class="sidebar-toggle-logo" src="assets/acorn-icon-primary.svg" width="18" height="18" alt="" aria-hidden="true" /><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.75" y="3.25" width="14.5" height="13.5" rx="2.25"/><path d="M7.75 3.5v13"/></svg></button></div>
+        <section class="sidebar-section" aria-labelledby="projects-label">
+          <div class="sidebar-group-heading">
+            <h2 class="sidebar-group-label" id="projects-label">Repositories</h2>
+            <button class="sidebar-add-project" id="add-project" type="button" aria-label="New Repository" data-tooltip="New Repository"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg></button>
+          </div>
+          <div id="project-list" class="project-list"></div>
+        </section>
+        <div class="sidebar-spacer"></div>
+        <div class="sidebar-bottom">
+          <button class="runtime-status-button" id="runtime-status" popovertarget="runtime-popover" aria-label="Running Servers 0"><svg class="runtime-status-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16.8001 12H7.1999M16.8001 12C19.451 12 21.6001 9.85096 21.6001 7.19999C21.6001 4.54903 19.451 2.39999 16.8001 2.39999H7.1999C4.54888 2.39999 2.39982 4.54912 2.3999 7.20015C2.39999 9.85105 4.549 12 7.1999 12M16.8001 12C19.451 12 21.6001 14.149 21.6001 16.8C21.6001 19.451 19.451 21.6 16.8001 21.6H7.1999C4.549 21.6 2.39999 19.4511 2.3999 16.8001C2.39982 14.1491 4.54887 12 7.1999 12M17.3997 7.19999H11.3997M17.3997 16.8H11.3997M6.59975 16.8902V16.8M6.59975 7.19999V7.10976" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Running Servers</span><b id="runtime-count">0</b></button>
+          <button class="sidebar-settings" id="open-settings" type="button" aria-label="Appearance" data-tooltip="Appearance" popovertarget="appearance-menu"><svg class="settings-trigger-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="M10 3.5a6.5 6.5 0 0 1 0 13z" fill="currentColor" stroke="none"/></svg><span class="settings-trigger-label">Appearance</span></button>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div class="project-heading">
+            <div class="project-title-row"><h1 id="project-title">Connect a repository</h1></div>
+            <div class="project-metadata">
+              <button type="button" class="project-path-chip" id="project-directory" data-tooltip="Open in Finder"><svg class="ui-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.75 14.5V6.25A1.75 1.75 0 0 1 4.5 4.5h3.1l1.8 2h6.1a1.75 1.75 0 0 1 1.75 1.75v1M2.75 14.5l2-4.25A1.25 1.25 0 0 1 5.88 9.5H17a1 1 0 0 1 .91 1.41l-1.95 4.34a1.25 1.25 0 0 1-1.14.75H4.5a1.75 1.75 0 0 1-1.75-1.5Z"/></svg><span class="breadcrumbs" id="project-remote">Connect a repository to begin</span></button>
+              <button type="button" class="project-branch-chip" id="project-github" data-tooltip="Open on GitHub"><span class="github-repository-icon" aria-hidden="true"></span><span id="project-branch"></span></button>
+              <span class="runtime-tag" id="runtime-mode" hidden></span>
+              <button type="button" class="project-path-chip project-preview-settings" id="project-preview-settings" data-tooltip="Preview Settings" aria-label="Preview Settings" disabled><svg class="ui-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915Z M15 12a3 3 0 1 0-6 0 3 3 0 0 0 6 0Z"/></svg></button>
+            </div>
+          </div>
+          <div class="top-actions" id="comparison-top-actions" hidden>
+          <button class="button secondary" id="refresh-all" disabled>Refresh Preview</button>
+          <button class="button secondary" id="show-diff" aria-controls="changes-panel" aria-expanded="false" disabled>Show Diff</button>
+          </div>
+        </header>
+
+        <section class="comparison-controls" id="comparison-controls" aria-label="Comparison settings" hidden>
+          <div class="comparison-actions">
+          <div class="view-options-group">
+          <div class="view-control"><span aria-hidden="true">View</span><fieldset class="layout-options" id="layout-mode"><legend class="sr-only">Preview layout</legend><label class="layout-option"><input type="radio" name="layout" value="split" checked /><span><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16"/></svg>Split</span></label><label class="layout-option"><input type="radio" name="layout" value="base" /><span><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16"/><path d="M6 7h3v10H6z" fill="currentColor" stroke="none"/></svg>Base Only</span></label><label class="layout-option"><input type="radio" name="layout" value="target" /><span><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16"/><path d="M15 7h3v10h-3z" fill="currentColor" stroke="none"/></svg>Target Only</span></label></fieldset></div>
+          </div>
+          <label class="mouse-sync-control"><input type="checkbox" id="mouse-sync" checked /> Mouse Sync</label>
+          <div class="diff-control">
+          <label class="mouse-sync-control" title="Show estimated areas linked to code changes"><input type="checkbox" id="diff-overlay" aria-controls="diff-scope" /> Diff</label>
+          <fieldset class="layout-options" id="diff-scope" hidden>
+            <legend class="sr-only">Diff preview scope</legend>
+            <label class="layout-option"><input type="radio" name="diff-scope" value="both" checked /><span>Both</span></label>
+            <label class="layout-option"><input type="radio" name="diff-scope" value="base" /><span>Base</span></label>
+            <label class="layout-option"><input type="radio" name="diff-scope" value="target" /><span>Target</span></label>
+          </fieldset>
+          </div>
+          </div>
+        </section>
+
+        <section class="project-loading" id="project-loading" aria-busy="true">
+          <div class="loading-dots" id="project-loading-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+          <p id="project-loading-message" role="status">Loading repositories…</p>
+          <button class="button secondary" id="retry-projects" hidden>Try again</button>
+        </section>
+        <section class="connection-empty" id="connection-empty" hidden>
+          <h2>Start comparing revisions and UI changes</h2>
+          <p>by connecting a local Git repository.</p>
+          <button class="button primary" id="empty-connect" type="button">Choose from Device</button>
+        </section>
+
+        <section class="connection-empty" id="comparison-empty" hidden>
+          <h2>No comparisons yet</h2>
+          <p>Create a comparison using the + button beside your repository.</p>
+          <button class="button primary" id="empty-comparison" type="button">New Comparison</button>
+        </section>
+
+        <section class="preview-grid" id="preview-grid" aria-label="Branch preview comparison" hidden>
+          <div class="canvas-toolbar" role="toolbar" aria-label="Preview controls">
+            <div class="preview-zoom" role="group" aria-label="Preview zoom"><button type="button" class="preview-zoom-step" id="canvas-zoom-out" aria-label="Zoom out previews"><svg class="preview-zoom-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 10h10"/></svg></button><button type="button" class="preview-zoom-value" id="canvas-zoom-reset" aria-label="Reset preview zoom"><span id="canvas-zoom-label" aria-live="polite">100%</span></button><button type="button" class="preview-zoom-step" id="canvas-zoom-in" aria-label="Zoom in previews"><svg class="preview-zoom-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 10h10M10 5v10"/></svg></button></div>
+            <button class="icon-button" id="canvas-fit" title="Fit to section" aria-label="Fit previews to section"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20 20 4M14 4h6v6M10 20H4v-6"/></svg></button>
+            <button type="button" class="icon-button" id="swap-refs" title="Switch base and target" aria-label="Switch base and target"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4"/></svg></button>
+            <button class="icon-button" id="canvas-expand" title="Expand preview" aria-label="Expand preview"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button>
+          </div>
+          <div class="expanded-toolbar" id="expanded-toolbar" hidden>
+            <div class="expanded-preview-options">
+              <div class="expanded-screen-control"><span>Screen</span><fieldset class="layout-options expanded-switch" id="expanded-switch">
+                <legend class="sr-only">Expanded preview screen</legend>
+                <label class="layout-option"><input type="radio" name="expanded-side" value="base" checked /><span>Base</span></label>
+                <label class="layout-option"><input type="radio" name="expanded-side" value="target" /><span>Target</span></label>
+              </fieldset></div>
+            </div>
+            <div class="expanded-preview-zoom"></div>
+            <div class="expanded-preview-actions"><button class="icon-button" id="expanded-close" aria-label="Collapse preview" title="Collapse preview"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M3 8h5V3m8 0v5h5M8 21v-5H3m18 0h-5v5"/></svg></button></div>
+          </div>
+          <article class="preview-panel base-panel">
+            <header class="preview-header">
+              <label class="preview-heading ref-select"><span class="preview-label">Base</span><select id="base-ref" aria-label="Base branch or commit"><option>Connect a repository</option></select></label>
+              <div class="preview-actions"><button class="icon-button" id="base-refresh" title="Refresh base preview" aria-label="Refresh base preview"><svg class="ui-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M19.1288 14.5C18.1109 17.6939 15.1954 20 11.7576 20C7.47318 20 4 16.4183 4 12C4 7.58172 7.47318 4 11.7576 4C14.629 4 17.136 5.60879 18.4773 8M16.1212 9H20V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="icon-button" id="base-fit" type="button" title="Fit to section" aria-label="Fit base preview to section"><svg class="ui-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14.2065 3C13.6542 3 13.2065 3.44772 13.2065 4C13.2065 4.55228 13.6542 5 14.2065 5V3ZM20 4H21C21 3.44772 20.5523 3 20 3V4ZM19 9.79311C19 10.3454 19.4477 10.7931 20 10.7931C20.5523 10.7931 21 10.3454 21 9.79311H19ZM13.2409 10.7586L12.5338 10.0515L12.5338 10.0515L13.2409 10.7586ZM9.79349 21C10.3458 21 10.7935 20.5523 10.7935 20C10.7935 19.4477 10.3458 19 9.79349 19V21ZM4 20H3C3 20.5523 3.44772 21 4 21V20ZM5 14.2069C5 13.6546 4.55228 13.2069 4 13.2069C3.44772 13.2069 3 13.6546 3 14.2069H5ZM14.2065 5H20V3H14.2065V5ZM19 4V9.79311H21V4H19ZM19.2929 3.29287L12.5338 10.0515L13.948 11.4658L20.7071 4.70713L19.2929 3.29287ZM9.79349 19H4V21H9.79349V19ZM5 20V14.2069H3V20H5ZM4.70712 20.7071L13.9481 11.4657L12.5338 10.0515L3.29288 19.2929L4.70712 20.7071Z" fill="currentColor"/></svg></button><button class="icon-button" id="base-expand" title="Expand base preview" aria-label="Expand base preview" aria-pressed="false"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button></div>
+
+            </header>
+            <form class="browser-chrome address-bar" id="base-address-form"><span class="address-label">Path</span><input class="preview-address" id="base-url" type="text" aria-label="Base preview address" placeholder="Local preview address" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go" readonly /><div class="preview-zoom" role="group" aria-label="Base preview zoom"><button type="button" class="preview-zoom-step" id="base-zoom-out" aria-label="Zoom out base preview" title="Zoom out"><svg class="preview-zoom-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 10h10"/></svg></button><button type="button" class="preview-zoom-value" id="base-zoom-reset" aria-label="Reset base preview zoom to 100%" title="Reset zoom to 100%"><span id="base-zoom-label" aria-live="polite">100%</span></button><button type="button" class="preview-zoom-step" id="base-zoom-in" aria-label="Zoom in base preview" title="Zoom in"><svg class="preview-zoom-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 10h10M10 5v10"/></svg></button></div></form>
+            <div class="page-preview runtime-preview" id="base-preview-viewport">
+              <span class="preview-mode-tag" tabindex="0" data-tooltip="Visual Preview shows the app’s appearance using sample data instead of live data.">Visual Preview</span>
+              <div class="preview-loading" id="base-preview-loading" role="status" aria-label="Preparing base preview"><span></span><p>Preparing preview…</p></div>
+              <div class="preview-device-frame" id="base-device-frame" hidden><iframe class="preview-frame" id="base-preview-frame" sandbox="allow-scripts allow-same-origin allow-forms" name="base-preview" title="Base preview"></iframe><button class="preview-resize-handle resize-edge resize-top" data-side="base" data-axis="height" data-edge="top" type="button" aria-label="Resize base preview from top"></button><button class="preview-resize-handle resize-edge resize-right" data-side="base" data-axis="width" data-edge="right" type="button" aria-label="Resize base preview from right"></button><button class="preview-resize-handle resize-edge resize-bottom" data-side="base" data-axis="height" data-edge="bottom" type="button" aria-label="Resize base preview from bottom"></button><button class="preview-resize-handle resize-edge resize-left" data-side="base" data-axis="width" data-edge="left" type="button" aria-label="Resize base preview from left"></button><button class="preview-resize-handle resize-corner resize-top-left" data-side="base" data-axis="both" data-edge="top-left" type="button" aria-label="Resize base preview from top left"></button><button class="preview-resize-handle resize-corner resize-top-right" data-side="base" data-axis="both" data-edge="top-right" type="button" aria-label="Resize base preview from top right"></button><button class="preview-resize-handle resize-corner resize-bottom-right" data-side="base" data-axis="both" data-edge="bottom-right" type="button" aria-label="Resize base preview from bottom right"></button><button class="preview-resize-handle resize-corner resize-bottom-left" data-side="base" data-axis="both" data-edge="bottom-left" type="button" aria-label="Resize base preview from bottom left"></button></div>
+              <button class="preview-resize-handle preview-resize-hint preview-resize-hint-right" data-side="base" data-axis="width" data-edge="right" type="button" aria-label="Drag to resize base preview width"></button>
+              <button class="preview-resize-handle preview-resize-hint preview-resize-hint-bottom" data-side="base" data-axis="height" data-edge="bottom" type="button" aria-label="Drag to resize base preview height"></button>
+            </div>
+          </article>
+
+          <button class="page-sync-button is-locked" id="page-sync" type="button" aria-label="Unlock page selection" aria-pressed="true" title="Page selection synced">
+            <svg class="page-sync-locked" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="8.25" width="11" height="8" rx="2"/><path d="M7 8.25V6a3 3 0 0 1 6 0v2.25"/></svg>
+            <svg class="page-sync-unlocked" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="8.25" width="11" height="8" rx="2"/><path d="M13 8.25V6a3 3 0 0 0-5.7-1.3"/></svg>
+          </button>
+
+          <article class="preview-panel target-panel">
+            <header class="preview-header">
+              <label class="preview-heading ref-select"><span class="preview-label">Target</span><select id="target-ref" aria-label="Target branch or commit"><option>Connect a repository</option></select></label>
+              <div class="preview-actions"><button class="icon-button" id="target-refresh" title="Refresh target preview" aria-label="Refresh target preview"><svg class="ui-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M19.1288 14.5C18.1109 17.6939 15.1954 20 11.7576 20C7.47318 20 4 16.4183 4 12C4 7.58172 7.47318 4 11.7576 4C14.629 4 17.136 5.60879 18.4773 8M16.1212 9H20V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="icon-button" id="target-fit" type="button" title="Fit to section" aria-label="Fit target preview to section"><svg class="ui-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M14.2065 3C13.6542 3 13.2065 3.44772 13.2065 4C13.2065 4.55228 13.6542 5 14.2065 5V3ZM20 4H21C21 3.44772 20.5523 3 20 3V4ZM19 9.79311C19 10.3454 19.4477 10.7931 20 10.7931C20.5523 10.7931 21 10.3454 21 9.79311H19ZM13.2409 10.7586L12.5338 10.0515L12.5338 10.0515L13.2409 10.7586ZM9.79349 21C10.3458 21 10.7935 20.5523 10.7935 20C10.7935 19.4477 10.3458 19 9.79349 19V21ZM4 20H3C3 20.5523 3.44772 21 4 21V20ZM5 14.2069C5 13.6546 4.55228 13.2069 4 13.2069C3.44772 13.2069 3 13.6546 3 14.2069H5ZM14.2065 5H20V3H14.2065V5ZM19 4V9.79311H21V4H19ZM19.2929 3.29287L12.5338 10.0515L13.948 11.4658L20.7071 4.70713L19.2929 3.29287ZM9.79349 19H4V21H9.79349V19ZM5 20V14.2069H3V20H5ZM4.70712 20.7071L13.9481 11.4657L12.5338 10.0515L3.29288 19.2929L4.70712 20.7071Z" fill="currentColor"/></svg></button><button class="icon-button" id="target-expand" title="Expand target preview" aria-label="Expand target preview" aria-pressed="false"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button></div>
+
+            </header>
+            <form class="browser-chrome address-bar" id="target-address-form"><span class="address-label">Path</span><input class="preview-address" id="target-url" type="text" aria-label="Target preview address" placeholder="Local preview address" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go" readonly /><div class="preview-zoom" role="group" aria-label="Target preview zoom"><button type="button" class="preview-zoom-step" id="target-zoom-out" aria-label="Zoom out target preview" title="Zoom out"><svg class="preview-zoom-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 10h10"/></svg></button><button type="button" class="preview-zoom-value" id="target-zoom-reset" aria-label="Reset target preview zoom to 100%" title="Reset zoom to 100%"><span id="target-zoom-label" aria-live="polite">100%</span></button><button type="button" class="preview-zoom-step" id="target-zoom-in" aria-label="Zoom in target preview" title="Zoom in"><svg class="preview-zoom-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M5 10h10M10 5v10"/></svg></button></div></form>
+            <div class="page-preview runtime-preview target-page" id="target-preview-viewport">
+              <span class="preview-mode-tag" tabindex="0" data-tooltip="Visual Preview shows the app’s appearance using sample data instead of live data.">Visual Preview</span>
+              <div class="preview-loading" id="target-preview-loading" role="status" aria-label="Preparing target preview"><span></span><p>Preparing preview…</p></div>
+              <div class="preview-device-frame" id="target-device-frame" hidden><iframe class="preview-frame" id="target-preview-frame" sandbox="allow-scripts allow-same-origin allow-forms" name="target-preview" title="Target preview"></iframe><button class="preview-resize-handle resize-edge resize-top" data-side="target" data-axis="height" data-edge="top" type="button" aria-label="Resize target preview from top"></button><button class="preview-resize-handle resize-edge resize-right" data-side="target" data-axis="width" data-edge="right" type="button" aria-label="Resize target preview from right"></button><button class="preview-resize-handle resize-edge resize-bottom" data-side="target" data-axis="height" data-edge="bottom" type="button" aria-label="Resize target preview from bottom"></button><button class="preview-resize-handle resize-edge resize-left" data-side="target" data-axis="width" data-edge="left" type="button" aria-label="Resize target preview from left"></button><button class="preview-resize-handle resize-corner resize-top-left" data-side="target" data-axis="both" data-edge="top-left" type="button" aria-label="Resize target preview from top left"></button><button class="preview-resize-handle resize-corner resize-top-right" data-side="target" data-axis="both" data-edge="top-right" type="button" aria-label="Resize target preview from top right"></button><button class="preview-resize-handle resize-corner resize-bottom-right" data-side="target" data-axis="both" data-edge="bottom-right" type="button" aria-label="Resize target preview from bottom right"></button><button class="preview-resize-handle resize-corner resize-bottom-left" data-side="target" data-axis="both" data-edge="bottom-left" type="button" aria-label="Resize target preview from bottom left"></button></div>
+              <button class="preview-resize-handle preview-resize-hint preview-resize-hint-right" data-side="target" data-axis="width" data-edge="right" type="button" aria-label="Drag to resize target preview width"></button>
+              <button class="preview-resize-handle preview-resize-hint preview-resize-hint-bottom" data-side="target" data-axis="height" data-edge="bottom" type="button" aria-label="Drag to resize target preview height"></button>
+            </div>
+          </article>
+        </section>
+      </main>
+
+      <aside class="changes-panel" id="changes-panel" aria-labelledby="changes-title" hidden>
+        <div class="diff-resizer" id="diff-resizer" role="separator" aria-label="Resize diff panel" aria-orientation="vertical" aria-valuemin="320" aria-valuenow="360" tabindex="0"></div>
+        <div class="changes-header">
+          <div class="changes-heading"><h2 id="changes-title">Loading changes</h2></div>
+          <div class="changes-actions">
+            <label class="mouse-sync-control previewable-only-control"><input type="checkbox" id="previewable-only" aria-controls="file-list" /> Previewable Only</label>
+          </div>
+        </div>
+        <div class="changes-content" id="changes-content">
+          <div class="file-list" id="file-list" role="listbox" aria-label="Changed files"></div>
+          <pre class="diff-view" id="diff-view"><code>Select a changed file.</code></pre>
+        </div>
+      </aside>
+    </div>
+    <div id="comparison-menu" class="comparison-menu" popover role="menu" aria-label="Comparison actions">
+      <button id="comparison-rename" type="button" role="menuitem">Rename</button>
+      <button id="comparison-delete" type="button" role="menuitem">Delete</button>
+    </div>
+    <dialog id="comparison-rename-dialog" class="comparison-rename-dialog" aria-labelledby="comparison-rename-title">
+      <form id="comparison-rename-form">
+        <h2 id="comparison-rename-title">Rename Comparison</h2>
+        <input id="comparison-name" aria-label="Name" name="name" type="text" maxlength="120" required autocomplete="off" />
+        <div class="comparison-rename-actions">
+          <button id="comparison-rename-cancel" class="button secondary" type="button">Cancel</button>
+          <button class="button primary" type="submit">Save</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="repository-delete-dialog" class="comparison-rename-dialog" aria-labelledby="repository-delete-title" aria-describedby="repository-delete-description">
+      <h2 id="repository-delete-title">Remove Repository</h2>
+      <p id="repository-delete-description">Remove the repository from Acorn? Your local files will be kept.</p>
+      <div class="comparison-rename-actions">
+        <button id="repository-delete-cancel" class="button secondary" type="button" autofocus>Cancel</button>
+        <button id="repository-delete-confirm" class="button primary" type="button">Remove Repository</button>
+      </div>
+    </dialog>
+    <section id="runtime-popover" class="runtime-popover" popover aria-labelledby="runtime-title">
+      <header><h2 id="runtime-title">Running Servers <span id="runtime-title-count">0</span></h2><button class="runtime-clear-all" id="runtime-clear-all" type="button" disabled hidden>Clear All</button></header>
+      <ul id="runtime-list"><li class="runtime-empty">No running servers</li></ul>
+    </section>
+    <div class="toast diff-progress" id="diff-progress" role="status" aria-live="polite" hidden><span class="diff-progress-icon" aria-hidden="true"><span class="diff-progress-spinner"></span><svg class="diff-progress-check" viewBox="0 0 16 16" fill="none"><path d="m3 8.5 3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span id="diff-progress-message">Loading diff...</span></div>
+    <div class="toast" id="toast" role="status" aria-live="polite" popover="manual"></div>
+    <div class="modal-backdrop" id="connection-modal" hidden>
+      <section class="connection-modal" role="dialog" aria-modal="true" aria-labelledby="connection-title">
+        <button type="button" class="modal-close" id="modal-close" aria-label="Close connection dialog"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+        <h2 id="connection-title">Connect a Git repository</h2>
+        <div class="connection-options">
+          <button class="connection-option" id="connect-local"><span>Drop your folder here, or click to choose one.</span></button>
+        </div>
+        <p class="connection-error" id="connection-error" role="alert"></p>
+      </section>
+    </div>
+    <dialog id="preview-files-dialog" class="settings-dialog preview-files-dialog" aria-labelledby="preview-files-title">
+      <header><span class="modal-kicker" id="preview-files-kicker">PREVIEW SETTINGS</span><button type="button" class="modal-close" id="preview-files-close" aria-label="Close preview folder settings"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button><h2 id="preview-files-title">Preview folders</h2></header>
+      <div class="preview-settings-tabs" id="preview-settings-tabs" role="tablist" aria-label="Preview settings">
+        <button type="button" id="preview-project-files-tab" role="tab" aria-selected="true" aria-controls="preview-project-files-panel" data-preview-settings-tab="project-files">Project Files</button>
+        <button type="button" id="preview-external-data-tab" role="tab" aria-selected="false" aria-controls="preview-external-data-panel" data-preview-settings-tab="external-data" tabindex="-1">External Data</button>
+      </div>
+      <section id="preview-project-files-panel" class="preview-settings-panel" role="tabpanel" aria-labelledby="preview-project-files-tab">
+        <p id="preview-files-description">Recommendations select folders used by detected preview entries. Unchecked folders are excluded. You can select additional folders if your preview needs them.</p>
+        <section id="preview-files-scan" aria-label="Checking preview folders"><p id="preview-files-status" role="status" aria-live="polite">Checking project folders…</p><progress id="preview-files-progress" max="4" value="0" aria-labelledby="preview-files-status"></progress></section>
+        <section id="preview-files-selection" hidden><div class="preview-files-toolbar"><span id="preview-files-count"></span><button type="button" class="button secondary" id="preview-files-reset">Use recommendations</button></div><div class="preview-files-scroll" id="preview-files-scroll"><div id="preview-files-list" class="preview-files-list" aria-label="Folders included in previews"></div></div></section>
+        <details id="preview-files-warning" class="preview-files-note preview-files-warning" hidden>
+          <summary>Reference analysis details</summary>
+          <div class="preview-files-warning-content">
+            <p>Some references could not be resolved. Recommendations leave folders without confirmed references unchecked. If content is missing, select the folders it needs and refresh.</p>
+            <ul id="preview-files-warning-list"></ul>
+          </div>
+        </details>
+      </section>
+      <section id="preview-external-data-panel" class="preview-settings-panel" role="tabpanel" aria-labelledby="preview-external-data-tab" hidden>
+        <p class="preview-external-data-description">Choose which external data this project can access in previews. Unchecked data stays unavailable, and your selections last until you quit Acorn.</p>
+        <p id="preview-external-data-status" class="preview-files-note" role="status" aria-live="polite">Checking external data…</p>
+        <div id="preview-external-data-scroll" class="preview-external-data-scroll" hidden>
+          <div id="preview-external-data-list" class="preview-external-data-list" aria-label="External data available to previews"></div>
+        </div>
+      </section>
+      <p id="preview-files-error" class="connection-error" role="alert"></p>
+      <footer><button type="button" class="button secondary" id="preview-files-cancel">Cancel</button><button type="button" class="button secondary" id="preview-files-retry" hidden>Retry</button><button type="button" class="button primary" id="preview-files-save" disabled>Save &amp; Refresh</button></footer>
+    </dialog>
+    <div class="appearance-menu" id="appearance-menu" popover role="menu" aria-label="Appearance">
+      <button type="button" role="menuitemradio" data-theme-option="light" aria-checked="false"><span>Light</span><svg class="appearance-check" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 10 3 3 7-7"/></svg></button>
+      <button type="button" role="menuitemradio" data-theme-option="dark" aria-checked="false"><span>Dark</span><svg class="appearance-check" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 10 3 3 7-7"/></svg></button>
+      <button type="button" role="menuitemradio" data-theme-option="system" aria-checked="true"><span>System</span><svg class="appearance-check" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 10 3 3 7-7"/></svg></button>
+    </div>
+    <dialog class="settings-dialog" id="settings-dialog" aria-labelledby="settings-title" hidden>
+      <div class="settings-layout">
+        <aside class="settings-navigation">
+          <h2 id="settings-title">Settings</h2>
+          <nav aria-label="Settings sections">
+            <button type="button" class="settings-nav-item" data-settings-section="appearance" aria-current="page" aria-controls="settings-appearance"><svg class="sidebar-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="M10 3.5a6.5 6.5 0 0 1 0 13z" fill="currentColor" stroke="none"/></svg>Preferences</button>
+          </nav>
+        </aside>
+        <section class="settings-content" id="settings-appearance" aria-labelledby="appearance-title">
+          <header class="settings-content-header"><h3 id="appearance-title">Appearance</h3><button class="modal-close" id="close-settings" type="button" aria-label="Close settings"><svg class="ui-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></header>
+          <div class="settings-row theme-setting"><div class="theme-setting-copy"><h4 id="theme-label">Theme</h4><p id="theme-description">How Acorn looks on this device.</p></div><fieldset class="theme-cards" id="theme-preference" aria-labelledby="theme-label" aria-describedby="theme-description"><label class="theme-card"><input type="radio" name="appearance-theme" value="light" /><span class="theme-card-body"><span class="theme-mini theme-mini-light" aria-hidden="true"><span class="mini-sidebar"></span><span class="mini-content"><i></i><i></i><i></i><b></b></span></span><span class="theme-card-caption"><span class="theme-check" aria-hidden="true">✓</span>Light</span></span></label><label class="theme-card"><input type="radio" name="appearance-theme" value="dark" /><span class="theme-card-body"><span class="theme-mini theme-mini-dark" aria-hidden="true"><span class="mini-sidebar"></span><span class="mini-content"><i></i><i></i><i></i><b></b></span></span><span class="theme-card-caption"><span class="theme-check" aria-hidden="true">✓</span>Dark</span></span></label><label class="theme-card"><input type="radio" name="appearance-theme" value="system" checked/><span class="theme-card-body"><span class="theme-mini theme-mini-system" aria-hidden="true"><span class="mini-sidebar"></span><span class="mini-content"><i></i><i></i><i></i><b></b></span></span><span class="theme-card-caption"><span class="theme-check" aria-hidden="true">✓</span>System</span></span></label></fieldset></div>
+        </section>
+      </div>
+    </dialog>
+    <script src="settings.js"></script>
+    <script src="ref-picker.js"></script>
+    <script src="page-picker.js"></script>
+    <script src="repository-links.js"></script>
+    <script src="preview-file-picker.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

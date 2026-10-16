@@ -1,0 +1,116 @@
+const { app, BrowserWindow } = require('electron');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const assert = require('node:assert/strict');
+const git = require('isomorphic-git');
+const net = require('node:net');
+const portOpen = url => new Promise((resolve, reject) => {
+  const socket = net.connect(Number(new URL(url).port), '127.0.0.1');
+  socket.once('connect', () => { socket.destroy(); resolve(true); });
+  socket.once('error', error => error.code === 'ECONNREFUSED' ? resolve(false) : reject(error));
+  socket.setTimeout(1000, () => { socket.destroy(); reject(new Error('Port check timed out')); });
+});
+const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'acorn-comparisons-'));
+const profile = path.join(scratch, 'profile');
+fs.mkdirSync(profile);
+app.setPath('userData', profile);
+app.setPath('sessionData', path.join(scratch, 'session'));
+const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
+(async () => {
+  const repo = path.join(scratch, 'repository');
+  fs.mkdirSync(repo);
+  await git.init({ fs, dir: repo, defaultBranch: 'main' });
+  for (const label of ['Before', 'After']) {
+    fs.writeFileSync(path.join(repo, 'index.html'), `<h1>${label}</h1>`);
+    await git.add({ fs, dir: repo, filepath: 'index.html' });
+    await git.commit({ fs, dir: repo, author: { name: 'Test', email: 'test@example.test' }, message: label });
+  }
+  fs.writeFileSync(path.join(profile, 'repositories.json'), JSON.stringify([repo]));
+  require('../src/main/desktop-main.cjs');
+  await app.whenReady();
+  const window = BrowserWindow.getAllWindows()[0];
+  window.hide();
+  const run = code => window.webContents.executeJavaScript(code);
+  const deadline = setTimeout(() => { console.error('Comparison verification timed out'); app.exit(1); }, 90000);
+  const waitFor = async code => {
+    for (let i = 0; i < 300; i++) {
+      if (!window.webContents.isLoading() && await run(code)) return;
+      await pause(100);
+    }
+    console.error(await run(`JSON.stringify({state: previewState, comparison: activeComparison, text: document.body.innerText})`));
+    throw new Error(`Timed out: ${code}`);
+  };
+  await waitFor(`activeComparison && Object.values(previewState).every(state => state === 'ready')`);
+  assert.match(await run(`document.querySelector('.comparison-item').textContent`), /^Working Folder • Main$/);
+  await run(`window.originalComparison = activeComparison.id; window.originalFrame = get('base-preview-frame'); document.querySelector('.new-comparison').click()`);
+  await waitFor(`Object.values(previewState).every(state => state === 'ready')`);
+  assert.equal(await run(`document.querySelectorAll('.comparison-item').length`), 2);
+  assert.match(await run(`document.querySelector('.comparison-item.active').textContent`), /^Main • [a-f0-9]{7}$/);
+  await run(`window.secondComparison = activeComparison.id; baseRef.value = targetRef.value; baseRef.dispatchEvent(new Event('change'))`);
+  await waitFor(`Object.values(previewState).every(state => state === 'ready')`);
+  await run(`activateRepository(activeRepository.path, window.originalComparison)`);
+  assert.equal(await run(`baseRef.value`), '__working_tree__');
+  assert.equal(await run(`get('base-preview-frame') === window.originalFrame`), true);
+  await run(`activateRepository(activeRepository.path, window.secondComparison)`);
+  assert.equal(await run(`baseRef.value === targetRef.value`), true);
+  await run(`document.querySelector('.repository-row .project-item').click()`);
+  assert.equal(await run(`document.querySelector('.comparison-list').hidden`), true);
+  await run(`document.querySelector('.repository-row .project-item').click()`);
+  assert.equal(await run(`document.querySelector('.comparison-list').hidden`), false);
+  window.reload();
+  await pause(300);
+  await waitFor(`activeComparison && document.querySelectorAll('.comparison-item').length === 2`);
+  await run(`document.querySelectorAll('.comparison-item')[1].click()`);
+  assert.equal(await run(`baseRef.value === targetRef.value`), true);
+  await waitFor(`Object.values(previewState).every(state => state === 'ready')`);
+  assert.equal(await run(`document.querySelector('.comparison-item').hasAttribute('title')`), false);
+  await run(`document.querySelector('.comparison-item.active').parentElement.querySelector('.comparison-more').click()`);
+  assert.equal(await run(`get('comparison-menu').matches(':popover-open')`), true);
+  console.log('Verified: action menu opens');
+  await run(`get('comparison-rename').click(); get('comparison-name').value = 'Release review'; get('comparison-rename-form').requestSubmit()`);
+  assert.equal(await run(`document.querySelector('.comparison-item.active').textContent`), 'Release review');
+  await run(`baseRef.value = 'main'; baseRef.dispatchEvent(new Event('change'))`);
+  await waitFor(`Object.values(previewState).every(state => state === 'ready')`);
+  assert.equal(await run(`comparisonName(activeRepository, activeComparison)`), 'Release review');
+  window.reload();
+  await pause(300);
+  await waitFor(`activeComparison && document.querySelectorAll('.comparison-item').length === 2`);
+  assert.equal(await run(`document.querySelectorAll('.comparison-item')[1].textContent`), 'Release review');
+  await run(`document.querySelectorAll('.comparison-item')[1].click(); window.deletedId = activeComparison.id; addComparison(activeRepository)`);
+  await waitFor(`Object.values(previewState).every(state => state === 'ready')`);
+  console.log('Verified: rename persists');
+  const beforeDelete = await run(`window.acornGit.listPreviewServers().then(result => result.servers.length)`);
+  assert.equal(beforeDelete, 3);
+  // The inactive comparison shares a branch with the default comparison, and a commit with the new one.
+  await run(`deleteComparison(activeRepository, comparisonsFor(activeRepository).find(item => item.id === window.deletedId))`);
+  assert.equal(await run(`window.acornGit.listPreviewServers().then(result => result.servers.length)`), 3);
+  await run(`document.querySelector('.comparison-item.active').parentElement.querySelector('.comparison-more').click(); get('comparison-delete').click(); previewRefresh`);
+  assert.equal(await run(`document.querySelectorAll('.comparison-item').length`), 1);
+  assert.equal(await run(`window.acornGit.listPreviewServers().then(result => result.servers.length)`), 2);
+  assert.equal(await run(`baseRef.value`), '__working_tree__');
+  // Deleting the last comparison stops its working-folder and commit servers and leaves an empty folder.
+  const finalUrls = await run(`Object.values(previewUrls).flatMap(preview => [preview.url, preview.upstreamUrl])`);
+  for (const url of finalUrls) assert.equal(await portOpen(url), true);
+  const closeStarted = performance.now();
+  await run(`deleteComparison(activeRepository, activeComparison)`);
+  for (const url of finalUrls) assert.equal(await portOpen(url), false, `Port still open: ${url}`);
+  console.log(`Verified: final comparison closes upstream and viewer ports (${(performance.now() - closeStarted).toFixed(1)} ms including IPC and probes)`);
+  assert.equal(await run(`window.acornGit.listPreviewServers().then(result => result.servers.length)`), 0);
+  assert.equal(await run(`get('comparison-empty').hidden`), false);
+  assert.equal(await run(`document.querySelectorAll('.comparison-item').length`), 0);
+  assert.equal(await run(`document.querySelectorAll('.preview-frame').length`), 2);
+  window.reload();
+  await pause(300);
+  await waitFor(`!get('comparison-empty').hidden`);
+  assert.equal(await run(`document.querySelectorAll('.comparison-item').length`), 0);
+  await run(`get('empty-comparison').click()`);
+  await waitFor(`activeComparison && Object.values(previewState).every(state => state === 'ready')`);
+  // Immediate deletion also cleans up pending preview starts.
+  await run(`addComparison(activeRepository); deleteComparison(activeRepository, activeComparison)`);
+  assert.equal(await run(`document.querySelectorAll('.comparison-item').length`), 1);
+  assert.equal(await run(`window.acornGit.listPreviewServers().then(result => result.servers.length)`), 2);
+  console.log('Passed: comparison creation, independent frames, rename persistence, action menu, shared servers preserved, exclusive servers stopped, empty folder persistence, pending-preview deletion.');
+  clearTimeout(deadline);
+  app.exit(0);
+})().catch(error => { console.error(error); app.exit(1); });

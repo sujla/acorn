@@ -1,0 +1,64 @@
+{
+  "name": "acorn",
+  "version": "1.0.0",
+  "description": "A local desktop workspace for comparing Git revisions with interactive previews",
+  "main": "desktop.cjs",
+  "acorn": {
+    "main": "src/main/desktop-main.cjs",
+    "renderer": "src/renderer/index.html"
+  },
+  "scripts": {
+    "web": "node scripts/serve.mjs",
+    "desktop": "zsh scripts/desktop.zsh",
+    "test": "npm run test:syntax && npm run test:unit",
+    "test:syntax": "node scripts/check-syntax.mjs",
+    "test:unit": "node --test tests/*.test.cjs"
+  },
+  "keywords": [],
+  "author": "Suji Kweon (sujla)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sujla/acorn.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sujla/acorn/issues"
+  },
+  "homepage": "https://github.com/sujla/acorn#readme",
+  "type": "commonjs",
+  "devDependencies": {
+    "electron": "43.5.1"
+  },
+  "dependencies": {
+    "@babel/parser": "^7.29.9",
+    "@svgr/core": "8.1.0",
+    "@svgr/plugin-jsx": "8.1.0",
+    "babel-preset-expo-sdk54": "npm:babel-preset-expo@54.0.12",
+    "babel-preset-expo-sdk55": "npm:babel-preset-expo@55.0.25",
+    "babel-preset-expo-sdk56": "npm:babel-preset-expo@56.0.20",
+    "babel-preset-expo-sdk57": "npm:babel-preset-expo@57.0.14",
+    "diff": "^9.0.0",
+    "esbuild": "^0.28.2",
+    "isomorphic-git": "^1.42.2",
+    "metro-config-sdk54": "npm:metro-config@0.83.8",
+    "metro-config-sdk55": "npm:metro-config@0.83.8",
+    "metro-config-sdk56": "npm:metro-config@0.84.5",
+    "metro-config-sdk57": "npm:metro-config@0.84.6",
+    "metro-sdk54": "npm:metro@0.83.8",
+    "metro-sdk55": "npm:metro@0.83.8",
+    "metro-sdk56": "npm:metro@0.84.5",
+    "metro-sdk57": "npm:metro@0.84.6",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-dom-sdk54": "npm:react-dom@19.1.0",
+    "react-dom-sdk55": "npm:react-dom@19.2.0",
+    "react-dom-sdk56": "npm:react-dom@19.2.3",
+    "react-dom-sdk57": "npm:react-dom@19.2.3",
+    "react-native-web": "0.21.2",
+    "react-sdk54": "npm:react@19.1.0",
+    "react-sdk55": "npm:react@19.2.0",
+    "react-sdk56": "npm:react@19.2.3",
+    "react-sdk57": "npm:react@19.2.3",
+    "yaml": "^2.9.1"
+  }
+}
